@@ -24,7 +24,7 @@ export const setupServer = () => {
 
   app.get('/contacts', async (req, res) => {
     const contacts = await getAllContacts();
-    console.log(contacts);
+
     res.json({
       status: 200,
       message: 'Successfully found contacts!',
@@ -34,22 +34,29 @@ export const setupServer = () => {
 
   app.get('/contacts/:contactId', async (req, res) => {
     const contactId = req.params.contactId;
-    const contact = await getContactById(contactId);
+
     if (!mongoose.Types.ObjectId.isValid(contactId)) {
       return res.status(400).json({
         message: 'Invalid id format',
       });
     }
-    if (!contact) {
-      return res.status(404).json({
-        message: "Sorry, contact with this id doesn't exist",
+    try {
+      const contact = await getContactById(contactId);
+      if (!contact) {
+        return res.status(400).json({
+          message: "Sorry, contact with this id doesn't exist",
+        });
+      }
+      res.json({
+        status: 200,
+        message: `Successfully found contact with id ${contactId}!`,
+        data: contact,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: 'Error with fetching contact data',
       });
     }
-    res.json({
-      status: 200,
-      message: `Successfully found contact with id ${contactId}!`,
-      data: contact,
-    });
   });
 
   app.use(notFoundMiddleware);
