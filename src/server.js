@@ -43,7 +43,8 @@ export const setupServer = () => {
     try {
       const contact = await getContactById(contactId);
       if (!contact) {
-        return res.status(400).json({
+        return res.status(404).json({
+          status: 404,
           message: "Sorry, contact with this id doesn't exist",
         });
       }
@@ -55,6 +56,7 @@ export const setupServer = () => {
     } catch (error) {
       res.status(500).json({
         message: 'Error with fetching contact data',
+        error: error.message,
       });
     }
   });
