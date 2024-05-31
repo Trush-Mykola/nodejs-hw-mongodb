@@ -2,10 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
 import { env } from './utils/env.js';
-import { getAllContacts, getContactById } from './services/contacts.js';
-import mongoose from 'mongoose';
-import { notFoundMiddleware } from './middlewares/notFoundMiddlware.js';
-import { errorHandlerMiddleware } from './middlewares/errorHandlerMiddlware.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import routerContacts from './routers/contacts.js';
 
 export const setupServer = () => {
   const app = express();
@@ -14,6 +13,7 @@ export const setupServer = () => {
 
   app.use(cors());
 
+  app.use(express.json());
   app.use(
     pino({
       transport: {
@@ -22,48 +22,11 @@ export const setupServer = () => {
     }),
   );
 
-  app.get('/contacts', async (req, res) => {
-    const contacts = await getAllContacts();
+  app.use(routerContacts);
 
-    res.json({
-      status: 200,
-      message: 'Successfully found contacts!',
-      data: contacts,
-    });
-  });
+  app.use('*', notFoundHandler);
 
-  app.get('/contacts/:contactId', async (req, res) => {
-    const contactId = req.params.contactId;
-
-    if (!mongoose.Types.ObjectId.isValid(contactId)) {
-      return res.status(400).json({
-        message: 'Invalid id format',
-      });
-    }
-    try {
-      const contact = await getContactById(contactId);
-      if (!contact) {
-        return res.status(404).json({
-          status: 404,
-          message: "Sorry, contact with this id doesn't exist",
-        });
-      }
-      res.json({
-        status: 200,
-        message: `Successfully found contact with id ${contactId}!`,
-        data: contact,
-      });
-    } catch (error) {
-      res.status(500).json({
-        message: 'Error with fetching contact data',
-        error: error.message,
-      });
-    }
-  });
-
-  app.use(notFoundMiddleware);
-
-  app.use(errorHandlerMiddleware);
+  app.use(errorHandler);
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
