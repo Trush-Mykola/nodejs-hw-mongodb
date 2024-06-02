@@ -50,9 +50,19 @@ export const createContactController = async (req, res) => {
   });
 };
 
-export const deleteContactController = async (req, res) => {
+export const deleteContactController = async (req, res, next) => {
   const contactId = req.params.contactId;
-  await deleteContact(contactId);
+  const contact = await deleteContact(contactId);
+
+  if (!mongoose.Types.ObjectId.isValid(contactId)) {
+    next(createHttpError(400, 'Invalid id format'));
+    return;
+  }
+
+  if (!contact) {
+    next(createHttpError(404, 'Contact not found!'));
+    return;
+  }
 
   res.status(204).send();
 };
@@ -63,7 +73,15 @@ export const upsertContactController = async (req, res, next) => {
     upsert: true,
   });
 
+  if (!mongoose.Types.ObjectId.isValid(contactId)) {
+    next(createHttpError(400, 'Invalid id format'));
+    return;
+  }
   if (!result) {
+    next(createHttpError(404, 'Contact not found!'));
+    return;
+  }
+  if (!contactId) {
     next(createHttpError(404, 'Contact not found!'));
     return;
   }
