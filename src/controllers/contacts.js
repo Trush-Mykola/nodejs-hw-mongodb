@@ -20,12 +20,13 @@ export const getContactsController = async (req, res) => {
 
 export const getContactByIdController = async (req, res, next) => {
   const contactId = req.params.contactId;
-  const contact = await getContactById(contactId);
 
   if (!mongoose.Types.ObjectId.isValid(contactId)) {
     next(createHttpError(400, 'Invalid id format'));
     return;
   }
+
+  const contact = await getContactById(contactId);
 
   if (!contact) {
     next(createHttpError(404, "Contact with this id doesn't exist"));
@@ -52,12 +53,13 @@ export const createContactController = async (req, res) => {
 
 export const deleteContactController = async (req, res, next) => {
   const contactId = req.params.contactId;
-  const contact = await deleteContact(contactId);
 
   if (!mongoose.Types.ObjectId.isValid(contactId)) {
     next(createHttpError(400, 'Invalid id format'));
     return;
   }
+
+  const contact = await deleteContact(contactId);
 
   if (!contact) {
     next(createHttpError(404, 'Contact not found!'));
@@ -69,19 +71,22 @@ export const deleteContactController = async (req, res, next) => {
 
 export const upsertContactController = async (req, res, next) => {
   const contactId = req.params.contactId;
-  const result = await updateContact(contactId, req.body, {
-    upsert: true,
-  });
 
   if (!mongoose.Types.ObjectId.isValid(contactId)) {
     next(createHttpError(400, 'Invalid id format'));
     return;
   }
-  if (!result) {
+
+  if (!contactId) {
     next(createHttpError(404, 'Contact not found!'));
     return;
   }
-  if (!contactId) {
+
+  const result = await updateContact(contactId, req.body, {
+    upsert: true,
+  });
+
+  if (!result) {
     next(createHttpError(404, 'Contact not found!'));
     return;
   }
