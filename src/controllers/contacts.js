@@ -77,7 +77,9 @@ export const upsertContactController = async (req, res, next) => {
     return;
   }
 
-  if (!contactId) {
+  const existedContact = await getContactById(contactId);
+
+  if (!existedContact) {
     next(createHttpError(404, 'Contact not found!'));
     return;
   }
