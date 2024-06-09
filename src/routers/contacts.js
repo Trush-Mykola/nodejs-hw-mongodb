@@ -7,8 +7,16 @@ import {
   upsertContactController,
 } from '../controllers/contacts.js';
 import { controllerWrapper } from '../utils/controllerWrapper.js';
+import { validateBody } from '../middlewares/validateBody.js';
+import {
+  createContactSchema,
+  updateContactSchema,
+} from '../validation/contacts.js';
+import { validateMongoId } from '../middlewares/validateMongoId.js';
 
 const routerContacts = Router();
+
+routerContacts.use('/contacts/:contactId', validateMongoId('contactId'));
 
 routerContacts.get('/contacts', controllerWrapper(getContactsController));
 
@@ -17,7 +25,11 @@ routerContacts.get(
   controllerWrapper(getContactByIdController),
 );
 
-routerContacts.post('/contacts', controllerWrapper(createContactController));
+routerContacts.post(
+  '/contacts',
+  validateBody(createContactSchema),
+  controllerWrapper(createContactController),
+);
 
 routerContacts.delete(
   '/contacts/:contactId',
@@ -26,6 +38,7 @@ routerContacts.delete(
 
 routerContacts.patch(
   '/contacts/:contactId',
+  validateBody(updateContactSchema),
   controllerWrapper(upsertContactController),
 );
 
