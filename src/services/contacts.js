@@ -21,7 +21,7 @@ const createPaginationInfo = (page, perPage, count) => {
 
 export const getAllContacts = async ({
   page = 1,
-  perPage = 5,
+  perPage = 10,
   sortBy = '_id',
   sortOrder = 'asc',
   isFavourite = false,
@@ -33,18 +33,17 @@ export const getAllContacts = async ({
     contactsQuery.where('isFavourite').equals(isFavourite);
   }
 
-  const contactsCount = await Contact.find()
-    .merge(contactsQuery)
-    .countDocuments();
-  const contacts = await Contact.find()
-    .merge(contactsQuery)
-    .skip(skip)
-    .limit(perPage)
-    .sort({
-      [sortBy]: sortOrder,
-    })
-    .exec();
-
+  const [contactsCount, contacts] = await Promise.all([
+    Contact.find().merge(contactsQuery).countDocuments(),
+    Contact.find()
+      .merge(contactsQuery)
+      .skip(skip)
+      .limit(perPage)
+      .sort({
+        [sortBy]: sortOrder,
+      })
+      .exec(),
+  ]);
   const paginationInfo = createPaginationInfo(page, perPage, contactsCount);
   return {
     data: contacts,
