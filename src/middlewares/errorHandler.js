@@ -6,7 +6,6 @@ export const errorHandler = (error, req, res, next) => {
       status: error.status,
       message: error.message,
       errors: error.errors,
-      data: { message: 'Contact not found' },
     });
   }
 
