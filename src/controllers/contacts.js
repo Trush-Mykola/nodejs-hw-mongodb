@@ -21,6 +21,7 @@ export const getContactsController = async (req, res) => {
     sortBy,
     sortOrder,
     isFavourite,
+    userId: req.user._id,
   });
 
   res.json({
@@ -48,9 +49,9 @@ export const getContactByIdController = async (req, res, next) => {
 };
 
 export const createContactController = async (req, res) => {
-  const body = req.body;
+  const { body } = req;
 
-  const contact = await createContact(body);
+  const contact = await createContact(body, req.user._id);
 
   res.status(201).json({
     status: 201,

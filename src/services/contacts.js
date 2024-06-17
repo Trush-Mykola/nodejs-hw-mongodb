@@ -25,6 +25,7 @@ export const getAllContacts = async ({
   sortBy = '_id',
   sortOrder = 'asc',
   isFavourite = false,
+  userId,
 }) => {
   const skip = perPage * (page - 1);
 
@@ -32,6 +33,7 @@ export const getAllContacts = async ({
   if (isFavourite) {
     contactsQuery.where('isFavourite').equals(isFavourite);
   }
+  contactsQuery.where('userId').equals(userId);
 
   const [contactsCount, contacts] = await Promise.all([
     Contact.find().merge(contactsQuery).countDocuments(),
@@ -55,8 +57,8 @@ export const getContactById = async (id) => {
   return await Contact.findById(id);
 };
 
-export const createContact = async (payload) => {
-  const contact = await Contact.create(payload);
+export const createContact = async (payload, userId) => {
+  const contact = await Contact.create({ ...payload, userId: userId });
   return contact;
 };
 
