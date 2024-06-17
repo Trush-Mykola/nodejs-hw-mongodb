@@ -28,16 +28,19 @@ routerContacts.get('/:contactId', controllerWrapper(getContactByIdController));
 routerContacts.post(
   '/',
   validateBody(createContactSchema),
+  authenticate,
   controllerWrapper(createContactController),
 );
 
 routerContacts.delete(
   '/:contactId',
+  authenticate,
   controllerWrapper(deleteContactController),
 );
 
 routerContacts.patch(
   '/:contactId',
+  authenticate,
   validateBody(updateContactSchema),
   controllerWrapper(upsertContactController),
 );
