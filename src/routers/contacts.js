@@ -17,9 +17,9 @@ import { authenticate } from '../middlewares/authenticate.js';
 
 const routerContacts = Router();
 
-routerContacts.use('/:contactId', validateMongoId('contactId'));
+routerContacts.use(authenticate);
 
-routerContacts.get('/', authenticate);
+routerContacts.use('/:contactId', validateMongoId('contactId'));
 
 routerContacts.get('/', controllerWrapper(getContactsController));
 
