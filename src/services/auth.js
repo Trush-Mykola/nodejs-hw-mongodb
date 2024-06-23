@@ -1,8 +1,11 @@
 import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
+import jwt from 'jsonwebtoken';
 import { User } from '../db/models/user.js';
 import { Session } from '../db/models/session.js';
 import { createSession } from '../utils/createSession.js';
+import { env } from '../utils/env.js';
+import { sendMail } from '../utils/sendMails.js';
 
 export const createUser = async (payload) => {
   const hashedPassword = await bcrypt.hash(payload.password, 10);
@@ -63,4 +66,46 @@ export const refreshToken = async ({ sessionId, sessionToken }) => {
     userId: session._id,
     ...createSession(),
   });
+};
+export const sendResetPassword = async (email) => {
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw createHttpError(404, 'User not found!');
+  }
+
+  const token = jwt.sign(
+    {
+      email,
+    },
+    env('JWT_SECRET'),
+    {
+      expiresIn: '5m',
+    },
+  );
+
+  console.log(`Generated token for ${email}: ${token}`);
+
+  try {
+    await sendMail({
+      html: `
+        <h1>Hello user</h1>
+        <p>Here your reset <a href='${env(
+          'APP_DOMAIN',
+        )}/reset-password?token=${token}'>link</a>
+        </p>
+      `,
+      to: email,
+      from: env('SMTP_FROM'),
+      subject: 'Reset your password!',
+    });
+
+    console.log(`Reset password email sent to ${email}`);
+  } catch (error) {
+    console.error(`Failed to send email to ${email}:`, error);
+    throw createHttpError(
+      500,
+      'Failed to send the email, please try again later.',
+    );
+  }
 };
