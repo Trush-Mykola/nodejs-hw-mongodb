@@ -75,9 +75,46 @@ export const deleteContactController = async (req, res, next) => {
   res.status(204).send();
 };
 
+// export const upsertContactController = async (req, res, next) => {
+//   const contactId = req.params.contactId;
+//   const userId = req.user._id;
+//   const { file } = req;
+
+//   const existedContact = await getContactById(contactId, userId);
+
+//   if (!existedContact) {
+//     next(createHttpError(404, 'Contact not found!'));
+//     return;
+//   }
+
+//   const result = await updateContact(
+//     contactId,
+//     req.body,
+//     { avatar: file },
+//     userId,
+//     {
+//       upsert: true,
+//     },
+//   );
+
+//   if (!result) {
+//     next(createHttpError(404, 'Contact not found!'));
+//     return;
+//   }
+
+//   const status = result.isNew ? 201 : 200;
+
+//   res.status(status).json({
+//     status,
+//     message: 'Successfully patched a contact!',
+//     data: result.contact,
+//   });
+// };
+
 export const upsertContactController = async (req, res, next) => {
   const contactId = req.params.contactId;
   const userId = req.user._id;
+  const { file } = req;
 
   const existedContact = await getContactById(contactId, userId);
 
@@ -87,6 +124,7 @@ export const upsertContactController = async (req, res, next) => {
   }
 
   const result = await updateContact(contactId, req.body, userId, {
+    avatar: file,
     upsert: true,
   });
 

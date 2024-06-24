@@ -74,17 +74,50 @@ export const deleteContact = async (id, userId) => {
   return await Contact.findOneAndDelete({ _id: id, userId });
 };
 
+// export const updateContact = async (
+//   contactId,
+//   { avatar, ...payload },
+//   userId,
+//   options = {},
+// ) => {
+//   const url = await saveToClaudinary(avatar);
+
+//   const rowResult = await Contact.findOneAndUpdate(
+//     { _id: contactId, userId: userId },
+//     { ...payload, photo: url },
+//     {
+//       new: true,
+//       includeResultMetadata: true,
+//       ...options,
+//     },
+//   );
+
+//   if (!rowResult || !rowResult.value) {
+//     throw createHttpError(404, 'Contact not found');
+//   }
+
+//   return {
+//     contact: rowResult.value,
+//     isNew: rowResult?.lastErrorObject?.upserted,
+//   };
+// };
+
 export const updateContact = async (
   contactId,
   { avatar, ...payload },
   userId,
   options = {},
 ) => {
-  const url = await saveToClaudinary(avatar);
+  let url;
+
+  if (avatar) {
+    // Якщо передано новий файл, оновіть зображення контакту
+    url = await saveToClaudinary(avatar);
+  }
 
   const rowResult = await Contact.findOneAndUpdate(
     { _id: contactId, userId: userId },
-    { ...payload, photo: url },
+    { ...payload, ...(avatar && { photo: url }) },
     {
       new: true,
       includeResultMetadata: true,
