@@ -10,15 +10,6 @@ const transport = nodemailer.createTransport({
   },
 });
 
-transport.verify((error, success) => {
-  if (error) {
-    console.error('SMTP Configuration Error:', error);
-  } else {
-    console.log('SMTP Configuration Successful');
-  }
-});
-
 export const sendMail = async (options) => {
-  console.log('Sending mail with options:', options);
   return await transport.sendMail(options);
 };

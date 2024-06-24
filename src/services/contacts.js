@@ -1,5 +1,7 @@
 import createHttpError from 'http-errors';
 import { Contact } from '../db/models/contact.js';
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import { saveToClaudinary } from '../utils/saveToClaudinary.js';
 
 const createPaginationInfo = (page, perPage, count) => {
   const totalPages = Math.ceil(count / perPage);
@@ -57,8 +59,14 @@ export const getContactById = async (id, userId) => {
   return await Contact.findOne({ _id: id, userId });
 };
 
-export const createContact = async (payload, userId) => {
-  const contact = await Contact.create({ ...payload, userId: userId });
+export const createContact = async ({ avatar, ...payload }, userId) => {
+  // const url = await saveFileToUploadDir(avatar);
+  const url = await saveToClaudinary(avatar);
+  const contact = await Contact.create({
+    ...payload,
+    userId: userId,
+    photo: url,
+  });
   return contact;
 };
 
@@ -68,13 +76,15 @@ export const deleteContact = async (id, userId) => {
 
 export const updateContact = async (
   contactId,
-  payload,
+  { avatar, ...payload },
   userId,
   options = {},
 ) => {
+  const url = await saveToClaudinary(avatar);
+
   const rowResult = await Contact.findOneAndUpdate(
     { _id: contactId, userId: userId },
-    payload,
+    { ...payload, photo: url },
     {
       new: true,
       includeResultMetadata: true,
