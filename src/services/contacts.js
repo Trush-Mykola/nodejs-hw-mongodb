@@ -1,6 +1,5 @@
 import createHttpError from 'http-errors';
 import { Contact } from '../db/models/contact.js';
-import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
 import { saveToClaudinary } from '../utils/saveToClaudinary.js';
 
 const createPaginationInfo = (page, perPage, count) => {
@@ -111,13 +110,12 @@ export const updateContact = async (
   let url;
 
   if (avatar) {
-    // Якщо передано новий файл, оновіть зображення контакту
     url = await saveToClaudinary(avatar);
   }
 
   const rowResult = await Contact.findOneAndUpdate(
     { _id: contactId, userId: userId },
-    { ...payload, ...(avatar && { photo: url }) },
+    { ...payload, photo: url },
     {
       new: true,
       includeResultMetadata: true,

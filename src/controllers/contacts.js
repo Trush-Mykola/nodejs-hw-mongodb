@@ -114,7 +114,7 @@ export const deleteContactController = async (req, res, next) => {
 export const upsertContactController = async (req, res, next) => {
   const contactId = req.params.contactId;
   const userId = req.user._id;
-  const { file } = req;
+  const file = req.file;
 
   const existedContact = await getContactById(contactId, userId);
 
