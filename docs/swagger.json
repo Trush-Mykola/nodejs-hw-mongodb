@@ -1,0 +1,764 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Contacts app",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "<http://www.apache.org/licenses/LICENSE-2.0.html>"
+    },
+    "description": "This is a documentation of contacts app\n"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    },
+    {
+      "url": "https://nodejs-hw-mongodb-voki.onrender.com"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Contacts",
+      "description": "Operations with contacts."
+    },
+    {
+      "name": "Auth",
+      "description": "Operations with authentication."
+    }
+  ],
+  "paths": {
+    "/contacts": {
+      "get": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Get all contacts",
+        "operationId": "getContacts",
+        "description": "Get all contacts from your phone book",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 1,
+              "example": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "perPage",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 10,
+              "example": 10
+            }
+          },
+          {
+            "in": "query",
+            "name": "totalItems",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "example": 5
+            }
+          },
+          {
+            "in": "query",
+            "name": "totalPages",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "example": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "hasPreviousPage",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "example": false
+            }
+          },
+          {
+            "in": "query",
+            "name": "hasNextPage",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "example": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get all contacts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found contacts"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "data",
+                        "page",
+                        "perPage",
+                        "totalItems",
+                        "totalPages",
+                        "hasPreviousPage",
+                        "hasNextPage"
+                      ],
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "_id": {
+                                "type": "string",
+                                "description": "Contact id",
+                                "example": "667e7ec5e630ca62ab105250"
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "Contact name",
+                                "example": "John Doe"
+                              },
+                              "phoneNumber": {
+                                "type": "string",
+                                "description": "Contact phone number",
+                                "example": "+1234567890"
+                              },
+                              "email": {
+                                "type": "string",
+                                "description": "Contact email",
+                                "example": "john.doe@example.com"
+                              },
+                              "isFavourite": {
+                                "type": "boolean",
+                                "description": "If contact in favourites",
+                                "default": false,
+                                "example": true
+                              },
+                              "contactType": {
+                                "type": "string",
+                                "description": "Contact type",
+                                "enum": [
+                                  "work",
+                                  "home",
+                                  "personal"
+                                ],
+                                "example": "personal"
+                              },
+                              "userId": {
+                                "type": "string",
+                                "description": "User id",
+                                "example": "507f1f77bcf86cd799439011"
+                              },
+                              "photo": {
+                                "type": "string",
+                                "description": "URL for your contact photo",
+                                "example": "http://example.com/photo.jpg"
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Date of creation",
+                                "example": "2024-01-01T12:00:00Z"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Last updating date",
+                                "example": "2024-01-02T12:00:00Z"
+                              }
+                            }
+                          },
+                          "example": [
+                            {
+                              "_id": "667e7ec5e630ca62ab105250",
+                              "name": "John Doe",
+                              "phoneNumber": "+1234567890",
+                              "email": "john.doe@example.com",
+                              "isFavourite": true,
+                              "contactType": "personal",
+                              "userId": "507f1f77bcf86cd799439011",
+                              "photo": "http://example.com/photo.jpg",
+                              "createdAt": "2024-01-01T12:00:00Z",
+                              "updatedAt": "2024-01-02T12:00:00Z"
+                            },
+                            {
+                              "_id": "667e7ec5e630ca62ab105251",
+                              "name": "Jane Smith",
+                              "phoneNumber": "+1987654321",
+                              "email": "jane.smith@example.com",
+                              "isFavourite": false,
+                              "contactType": "work",
+                              "userId": "507f1f77bcf86cd799439012",
+                              "photo": "http://example.com/photo2.jpg",
+                              "createdAt": "2024-02-01T10:00:00Z",
+                              "updatedAt": "2024-02-02T11:00:00Z"
+                            }
+                          ]
+                        },
+                        "page": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "perPage": {
+                          "type": "integer",
+                          "example": 10
+                        },
+                        "totalItems": {
+                          "type": "integer",
+                          "example": 2
+                        },
+                        "totalPages": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "hasPreviousPage": {
+                          "type": "boolean",
+                          "example": false
+                        },
+                        "hasNextPage": {
+                          "type": "boolean",
+                          "example": false
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Create a new contact",
+        "operationId": "createContact",
+        "description": "Create a new contact in your phone book",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "phoneNumber"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Contact name",
+                    "example": "Rayan Gosling"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Contact phone number",
+                    "example": "+1234567890"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created a contact",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully created a contact!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/newContact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/contacts/{id}": {
+      "get": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Get contact by id",
+        "operationId": "getContact",
+        "description": "Get contact by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "667e7ec5e630ca62ab105248"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get contact by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found contact with id 65ca67e7ae7f10c88b598384!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/contact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Update contact by id",
+        "operationId": "updateContact",
+        "description": "Update a contact in your phone book by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "667e7ec5e630ca62ab105250"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Contact name",
+                    "example": "John Doe"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Contact phone number",
+                    "example": "+00000000001"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "Contact email",
+                    "example": "johndoe@mail.com"
+                  },
+                  "isFavourite": {
+                    "type": "boolean",
+                    "description": "Is contact a favourite",
+                    "default": false,
+                    "example": false
+                  },
+                  "contactType": {
+                    "type": "string",
+                    "description": "Type of contact",
+                    "enum": [
+                      "work",
+                      "home",
+                      "personal"
+                    ],
+                    "default": "personal",
+                    "example": "work"
+                  },
+                  "photo": {
+                    "type": "string",
+                    "description": "URL to contact photo",
+                    "example": "https://example.com/photo.jpg"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the contact",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully updated the contact!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/updatedContact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Delete contact by id",
+        "operationId": "deleteContact",
+        "description": "Delete a contact from your phone book by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "667e7ec5e630ca62ab1050"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted the contact"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "responses": {
+      "404": {
+        "description": "Contact not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 404
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Contact not found"
+                },
+                "data": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "newContact": {
+        "type": "object",
+        "required": [
+          "name",
+          "phoneNumber"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Rayan Gosling"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": "+1234567890"
+          },
+          "email": {
+            "type": "string",
+            "example": "ryangosling@mail.com"
+          },
+          "isFavourite": {
+            "type": "boolean",
+            "default": false,
+            "example": true
+          },
+          "contactType": {
+            "type": "string",
+            "enum": [
+              "work",
+              "home",
+              "personal"
+            ],
+            "default": "personal",
+            "example": "work"
+          },
+          "userId": {
+            "type": "string",
+            "example": "507f1f77bcf86cd799439011"
+          },
+          "photo": {
+            "type": "string",
+            "example": "https://res.cloudinary.com/dzwg4murh/image/upload/v1719566021/dhkgoblx0of4n6ybw4bu.jpg"
+          },
+          "_id": {
+            "type": "string",
+            "example": "667e7ec5e630ca62ab105248"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date of creation",
+            "example": "2024-06-28T09:13:41.880Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last updating date",
+            "example": "2024-06-28T09:13:41.880Z"
+          }
+        }
+      },
+      "contact": {
+        "type": "object",
+        "required": [
+          "_id",
+          "name",
+          "phoneNumber",
+          "userId"
+        ],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Contact id",
+            "example": "667e7ec5e630ca62ab105248"
+          },
+          "name": {
+            "type": "string",
+            "description": "Contact name",
+            "example": "John Doe"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Contact phone number",
+            "example": "+1234567890"
+          },
+          "email": {
+            "type": "string",
+            "description": "Contact email",
+            "example": "john.doe@example.com"
+          },
+          "isFavourite": {
+            "type": "boolean",
+            "description": "If contact in favourites",
+            "default": false,
+            "example": true
+          },
+          "contactType": {
+            "type": "string",
+            "description": "Contact type",
+            "enum": [
+              "work",
+              "home",
+              "personal"
+            ],
+            "example": "personal"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User id",
+            "example": "507f1f77bcf86cd799439011"
+          },
+          "photo": {
+            "type": "string",
+            "description": "URL for your contact photo",
+            "example": "http://example.com/photo.jpg"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date of creation",
+            "example": "2024-01-01T12:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last updating date",
+            "example": "2024-01-02T12:00:00Z"
+          }
+        }
+      },
+      "updatedContact": {
+        "type": "object",
+        "required": [
+          "_id"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": "+00000000001"
+          },
+          "email": {
+            "type": "string",
+            "example": "johndoe@mail.com"
+          },
+          "isFavourite": {
+            "type": "boolean",
+            "default": false,
+            "example": false
+          },
+          "contactType": {
+            "type": "string",
+            "enum": [
+              "work",
+              "home",
+              "personal"
+            ],
+            "default": "personal",
+            "example": "home"
+          },
+          "userId": {
+            "type": "string",
+            "example": "507f1f77bcf86cd799439011"
+          },
+          "photo": {
+            "type": "string",
+            "example": "https://example.com/photo.jpg"
+          },
+          "_id": {
+            "type": "string",
+            "example": "667e7ec5e630ca62ab105250"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date of creation",
+            "example": "2024-06-28T09:13:41.880Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last updating date",
+            "example": "2024-06-28T09:13:41.880Z"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+type: object
+required:
+  - _id
+properties:
+  name:
+    type: string
+    example: 'John Doe'
+  phoneNumber:
+    type: string
+    example: '+00000000001'
+  email:
+    type: string
+    example: 'johndoe@mail.com'
+  isFavourite:
+    type: boolean
+    default: false
+    example: false
+  contactType:
+    type: string
+    enum: ['work', 'home', 'personal']
+    default: personal
+    example: 'home'
+  userId:
+    type: string
+    example: '507f1f77bcf86cd799439011'
+  photo:
+    type: string
+    example: 'https://example.com/photo.jpg'
+  _id:
+    type: string
+    example: '667e7ec5e630ca62ab105250'
+  createdAt:
+    type: string
+    format: date-time
+    description: 'Date of creation'
+    example: '2024-06-28T09:13:41.880Z'
+  updatedAt:
+    type: string
+    format: date-time
+    description: 'Last updating date'
+    example: '2024-06-28T09:13:41.880Z'

@@ -1,0 +1,48 @@
+tags:
+  - Contacts
+summary: Create a new contact
+operationId: createContact
+description: 'Create a new contact in your phone book'
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - name
+          - phoneNumber
+        properties:
+          name:
+            type: string
+            description: 'Contact name'
+            example: 'Rayan Gosling'
+          phoneNumber:
+            type: string
+            description: 'Contact phone number'
+            example: '+1234567890'
+responses:
+  '201':
+    description: 'Successfully created a contact'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: 'Successfully created a contact!'
+            data:
+              type: object
+              $ref: '../../components/schemas/newContact.yaml'
+  '404':
+    $ref: '../../components/responses/404.yaml'

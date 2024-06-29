@@ -1,0 +1,42 @@
+type: object
+required:
+  - name
+  - phoneNumber
+properties:
+  name:
+    type: string
+    example: 'Rayan Gosling'
+  phoneNumber:
+    type: string
+    example: '+1234567890'
+  email:
+    type: string
+    example: 'ryangosling@mail.com'
+  isFavourite:
+    type: boolean
+    default: false
+    example: true
+  contactType:
+    type: string
+    enum: ['work', 'home', 'personal']
+    default: personal
+    example: 'work'
+  userId:
+    type: string
+    example: '507f1f77bcf86cd799439011'
+  photo:
+    type: string
+    example: 'https://res.cloudinary.com/dzwg4murh/image/upload/v1719566021/dhkgoblx0of4n6ybw4bu.jpg'
+  _id:
+    type: string
+    example: '667e7ec5e630ca62ab105248'
+  createdAt:
+    type: string
+    format: date-time
+    description: 'Date of creation'
+    example: '2024-06-28T09:13:41.880Z'
+  updatedAt:
+    type: string
+    format: date-time
+    description: 'Last updating date'
+    example: '2024-06-28T09:13:41.880Z'
