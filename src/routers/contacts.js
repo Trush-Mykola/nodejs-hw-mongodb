@@ -28,7 +28,7 @@ routerContacts.get('/:contactId', controllerWrapper(getContactByIdController));
 
 routerContacts.post(
   '/',
-  upload.single('avatar'),
+  upload.single('photo'),
   validateBody(createContactSchema),
   authenticate,
   controllerWrapper(createContactController),
@@ -42,7 +42,7 @@ routerContacts.delete(
 
 routerContacts.patch(
   '/:contactId',
-  upload.single('avatar'),
+  upload.single('photo'),
   authenticate,
   validateBody(updateContactSchema),
   controllerWrapper(upsertContactController),

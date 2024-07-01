@@ -58,9 +58,13 @@ export const getContactById = async (id, userId) => {
   return await Contact.findOne({ _id: id, userId });
 };
 
-export const createContact = async ({ avatar, ...payload }, userId) => {
+export const createContact = async ({ photo, ...payload }, userId) => {
+  let url;
   // const url = await saveFileToUploadDir(avatar);
-  const url = await saveToClaudinary(avatar);
+  // const url = await saveToClaudinary(avatar);
+  if (photo) {
+    url = await saveToClaudinary(photo);
+  }
   const contact = await Contact.create({
     ...payload,
     userId: userId,
@@ -103,14 +107,14 @@ export const deleteContact = async (id, userId) => {
 
 export const updateContact = async (
   contactId,
-  { avatar, ...payload },
+  { photo, ...payload },
   userId,
   options = {},
 ) => {
   let url;
 
-  if (avatar) {
-    url = await saveToClaudinary(avatar);
+  if (photo) {
+    url = await saveToClaudinary(photo);
   }
 
   const rowResult = await Contact.findOneAndUpdate(

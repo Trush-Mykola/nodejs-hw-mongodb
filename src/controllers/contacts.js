@@ -52,7 +52,7 @@ export const getContactByIdController = async (req, res, next) => {
 export const createContactController = async (req, res) => {
   const { body, file } = req;
 
-  const contact = await createContact({ ...body, avatar: file }, req.user._id);
+  const contact = await createContact({ photo: file, ...body }, req.user._id);
 
   res.status(201).json({
     status: 201,
@@ -124,7 +124,7 @@ export const upsertContactController = async (req, res, next) => {
   }
 
   const result = await updateContact(contactId, req.body, userId, {
-    avatar: file,
+    photo: file,
     upsert: true,
   });
 
