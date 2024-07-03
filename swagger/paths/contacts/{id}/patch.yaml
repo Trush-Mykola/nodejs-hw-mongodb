@@ -43,6 +43,7 @@ requestBody:
             example: 'work'
           photo:
             type: string
+            format: binary
             description: 'URL to contact photo'
             example: 'https://example.com/photo.jpg'
 responses:
