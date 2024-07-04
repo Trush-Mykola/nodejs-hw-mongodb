@@ -15,6 +15,7 @@ import {
 import { validateMongoId } from '../middlewares/validateMongoId.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import { upload } from '../middlewares/upload.js';
+import { convertBoolean } from '../middlewares/convertBoolean.js';
 
 const routerContacts = Router();
 
@@ -29,6 +30,7 @@ routerContacts.get('/:contactId', controllerWrapper(getContactByIdController));
 routerContacts.post(
   '/',
   upload.single('photo'),
+  convertBoolean,
   validateBody(createContactSchema),
   authenticate,
   controllerWrapper(createContactController),
@@ -43,6 +45,7 @@ routerContacts.delete(
 routerContacts.patch(
   '/:contactId',
   upload.single('photo'),
+  convertBoolean,
   authenticate,
   validateBody(updateContactSchema),
   controllerWrapper(upsertContactController),
